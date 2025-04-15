@@ -1,42 +1,33 @@
-image: docker:latest
+# .github/workflows/docker.yml
+name: Docker CI
 
+on:
+  push:
+    branches:
+      - master
 
-pipelines:
-  branches:
-    master:
-      - step:
-          name: Remove Docker Images
-          runs-on:
-            - self.hosted
-            - windows
-          script:
-            - docker stop $(docker ps -a -q) 
-            - docker rm $(docker ps -a -q) 
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, windows]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - step:
-          name: Login in Docker Hub
-          runs-on:
-            - windows
-            - self.hosted
-          script:
-            - $env:DOCKER_USERNAME = "vitalinkakalinka"
-            - $env:DOCKER_PASSWORD = "28072005Mv"
-            - docker login -u $env:DOCKER_USERNAME -p $env:DOCKER_PASSWORD
+      - name: Remove Docker Images
+        run: |
+          docker stop $(docker ps -a -q) || true
+          docker rm $(docker ps -a -q) || true
 
-      - step:
-          name: Build & Push
-          runs-on:
-            - windows
-            - self.hosted
-          script:
-            - docker build -t app.py:latest .
-            - docker tag app.py:latest vitalinkakalinka/curcash:latest
-            - docker push vitalinkakalinka/curcash:latest
+      - name: Login to Docker Hub
+        run: |
+          docker login -u vitalinkakalinka -p 28072005Mv
 
-      - step:
-          name: Run
-          runs-on:
-            - windows
-            - self.hosted
-          script:
-            - docker run -d -p 8080:80 vitalinkakalinka/curcash:latest
+      - name: Build & Push
+        run: |
+          docker build -t app.py:latest .
+          docker tag app.py:latest vitalinkakalinka/curcash:latest
+          docker push vitalinkakalinka/curcash:latest
+
+      - name: Run
+        run: |
+          docker run -d -p 8080:80 vitalinkakalinka/curcash:latest
