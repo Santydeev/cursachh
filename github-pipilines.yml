@@ -15,8 +15,8 @@ jobs:
 
       - name: Remove Docker Images
         run: |
-          docker stop $(docker ps -a -q) || true
-          docker rm $(docker ps -a -q) || true
+          docker stop $(docker ps -a -q) 
+          docker rm $(docker ps -a -q)
 
       - name: Login to Docker Hub
         run: |
