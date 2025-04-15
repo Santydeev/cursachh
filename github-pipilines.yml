@@ -1,7 +1,9 @@
+image: docker:latest
+
 
 pipelines:
   branches:
-    develop:
+    master:
       - step:
           name: Remove Docker Images
           runs-on:
