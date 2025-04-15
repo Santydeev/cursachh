@@ -33,4 +33,4 @@ jobs:
 
       - name: Run new container
         run: |
-          docker run -d -p 8080:80 --name curcash-container vittoscaletta/curcash:latest
+          docker run -d -p 8080:80 --name curcash-containe vittoscaletta/curcash:latest
