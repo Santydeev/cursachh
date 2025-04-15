@@ -3,7 +3,7 @@ pipelines:
   branches:
     develop:
       - step:
-          name: Remove Docker Images
+          name: Remove Docker Image
           runs-on:
             - self.hosted
             - windows
