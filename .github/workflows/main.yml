@@ -1,10 +1,14 @@
-# .github/workflows/docker.yml
 name: Docker CI
 
 on:
   push:
     branches:
       - master
+
+env:
+  DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+  DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+  IMAGE_NAME: vitalinkakalinka/curcash
 
 jobs:
   build-and-deploy:
@@ -13,21 +17,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Remove Docker Images
-        run: |
-          docker stop $(docker ps -a -q) 
-          docker rm $(docker ps -a -q)
-
       - name: Login to Docker Hub
-        run: |
-          docker login -u vitalinkakalinka -p 28072005Mv
+        run: echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USER" --password-stdin
 
-      - name: Build & Push
+      - name: Build Docker image
         run: |
-          docker build -t app.py:latest .
-          docker tag app.py:latest vitalinkakalinka/curcash:latest
-          docker push vitalinkakalinka/curcash:latest
+          docker build -t $IMAGE_NAME:latest .
+          docker tag $IMAGE_NAME:latest $IMAGE_NAME:$(git rev-parse --short HEAD)
 
-      - name: Run
+      - name: Push Docker image
         run: |
-          docker run -d -p 8080:80 vitalinkakalinka/curcash:latest
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$(git rev-parse --short HEAD)
+
+      - name: Stop and remove previous container
+        run: |
+          docker stop curcash-container || true
+          docker rm curcash-container || true
+
+      - name: Run new container
+        run: |
+          docker run -d -p 8080:80 --name curcash-container $IMAGE_NAME:latest
