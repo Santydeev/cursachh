@@ -32,8 +32,8 @@ jobs:
 
       - name: Stop and remove previous container
         run: |
-          docker stop curcash-container || true
-          docker rm curcash-container || true
+          docker stop curcash-container
+          docker rm curcash-container
 
       - name: Run new container
         run: |
