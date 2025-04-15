@@ -30,10 +30,6 @@ jobs:
           docker push vittoscaletta/curcash:latest
           docker push vittoscaletta/curcash:$(git rev-parse --short HEAD)
 
-      - name: Stop and remove previous container
-        run: |
-          docker stop curcash-container
-          docker rm curcash-container
 
       - name: Run new container
         run: |
