@@ -1,0 +1,40 @@
+
+pipelines:
+  branches:
+    develop:
+      - step:
+          name: Remove Docker Images
+          runs-on:
+            - self.hosted
+            - windows
+          script:
+            - docker stop $(docker ps -a -q) 
+            - docker rm $(docker ps -a -q) 
+
+      - step:
+          name: Login in Docker Hub
+          runs-on:
+            - windows
+            - self.hosted
+          script:
+            - $env:DOCKER_USERNAME = "vitalinkakalinka"
+            - $env:DOCKER_PASSWORD = "28072005Mv"
+            - docker login -u $env:DOCKER_USERNAME -p $env:DOCKER_PASSWORD
+
+      - step:
+          name: Build & Push
+          runs-on:
+            - windows
+            - self.hosted
+          script:
+            - docker build -t app.py:latest .
+            - docker tag app.py:latest vitalinkakalinka/curcash:latest
+            - docker push vitalinkakalinka/curcash:latest
+
+      - step:
+          name: Run
+          runs-on:
+            - windows
+            - self.hosted
+          script:
+            - docker run -d -p 8080:80 vitalinkakalinka/curcash:latest
