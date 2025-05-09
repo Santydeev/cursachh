@@ -30,4 +30,4 @@ jobs:
 
       - name: Run
         run: |
-          docker run -d -p 8080:80 vitalinkakalinka/curcash:latest
+          docker run -d -p 3000:80 vitalinkakalinka/curcash:latest
