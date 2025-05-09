@@ -10,7 +10,7 @@ jobs:
   build-and-deploy:
     runs-on: [self-hosted, windows]
     steps:
-      - name: Checkout code
+      - name: Checkout cod
         uses: actions/checkout@v3
 
       - name: Remove Docker Images
