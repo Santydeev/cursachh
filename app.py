@@ -12,7 +12,7 @@ def index():
         <title>Приветствие</title>
         <style>
             body { font-family: Arial, sans-serif; margin: 40px; }
-            #greet { margin-top: 20px; font-size: 1.2em; color: #2a7; }
+            #greet { margin-top: 20px; font-size: 1.2em; color: #CD5C5C; }
             button { padding: 10px 20px; font-size: 1em; }
         </style>
     </head>
